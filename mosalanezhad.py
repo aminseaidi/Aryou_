@@ -399,7 +399,25 @@ def admin():
         flash('تغییرات با موفقیت ذخیره شد!')
         return redirect(url_for('admin'))
 
-    users = User.query.all() # گرفتن لیست همه کاربران
+    users = User.query.all()
+users_html = ""
+for u in users:
+    role_text = "ادمین" if u.is_admin else "کاربر"
+    if u.email == 'admin@site.com':
+        action_html = '<span style="color: #94a3b8; font-size: 12px;">مدیر کل</span>'
+    else:
+        btn_color = "#ef4444" if u.is_admin else "#10b981"
+        btn_text = "حذف ادمینی" if u.is_admin else "ارتقا به ادمین"
+        action_html = f'<a href="/toggle_admin/{u.id}" class="btn" style="padding: 5px 10px; font-size: 12px; background: {btn_color};">{btn_text}</a>'
+    
+    users_html += f"""
+    <tr>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;">{u.name}</td>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;">{u.email}</td>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;">{role_text}</td>
+        <td style="padding: 10px; border: 1px solid #e2e8f0;">{action_html}</td>
+    </tr>
+    """ 
     content = f"""
     <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
         <h2 style="color: #1e3a8a; text-align: center; margin-bottom: 30px;">پنل مدیریت پیشرفته</h2>
@@ -471,29 +489,14 @@ def admin():
             <div id="tab-users" class="page-form" style="display:none;">
                 <h3>مدیریت کاربران</h3>
                 <table style="width: 100%; border-collapse: collapse; margin-top: 15px; text-align: center;">
-                    <tr style="background: #f1f5f9;">
-                        <th style="padding: 10px; border: 1px solid #e2e8f0;">نام</th>
-                        <th style="padding: 10px; border: 1px solid #e2e8f0;">ایمیل</th>
-                        <th style="padding: 10px; border: 1px solid #e2e8f0;">نقش</th>
-                        <th style="padding: 10px; border: 1px solid #e2e8f0;">عملیات</th>
-                    </tr>
-                    {{% for u in users %}}
-                    <tr>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">{{{{ u.name }}}}</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">{{{{ u.email }}}}</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">{{{{ "ادمین" if u.is_admin else "کاربر" }}}}</td>
-                        <td style="padding: 10px; border: 1px solid #e2e8f0;">
-                            {{% if u.email != 'admin@site.com' %}}
-                            <a href="/toggle_admin/{{{{ u.id }}}}" class="btn" style="padding: 5px 10px; font-size: 12px; background: {{% if u.is_admin %}}#ef4444{{% else %}}#10b981{{% endif %}};">
-                                {{% if u.is_admin %}}حذف ادمینی{{% else %}}ارتقا به ادمین{{% endif %}}
-                            </a>
-                            {{% else %}}
-                            <span style="color: #94a3b8; font-size: 12px;">مدیر کل</span>
-                            {{% endif %}}
-                        </td>
-                    </tr>
-                    {{% endfor %}}
-                </table>
+    <tr style="background: #f1f5f9;">
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">نام</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">ایمیل</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">نقش</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">عملیات</th>
+    </tr>
+    {users_html}
+</table>
             </div>
 
             <button type="submit" class="btn" style="width: 100%; margin-top: 30px; background: #10b981;">💾 ذخیره تمام تغییرات</button>
