@@ -5,7 +5,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 
-app = Flask(__name__)
+app = Flask(name)
 app.secret_key = 'super_secret_key_123'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'static', 'uploads')
@@ -136,6 +136,7 @@ BASE_HTML = """
             {% endif %}
         </div>
     </nav>
+
     <div class="container">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -154,8 +155,8 @@ BASE_HTML = """
 def get_content(key, default=""):
     entry = SiteContent.query.filter_by(key=key).first()
     return entry.value if entry else default
-# --- صفحات سایت ---
 
+# --- صفحات سایت ---
 @app.route('/')
 def home():
     title = get_content('home_title')
@@ -201,6 +202,7 @@ def about():
     </div>
     """
     return render_template_string(BASE_HTML, content=content)
+
 @app.route('/staff')
 def staff():
     title = get_content('staff_title')
@@ -304,7 +306,7 @@ def contact():
                 <p dir="ltr" style="font-weight: bold; font-size: 20px;">{phone}</p>
             </div>
             <div class="card">
-            <div class="card-icon">📍</div>
+                <div class="card-icon">📍</div>
                 <h3>آدرس</h3>
                 <p>{address_text}</p>
                 <a href="{address_link}" target="_blank" class="btn" style="margin-top: 15px; font-size: 14px; padding: 10px 20px;">مشاهده در گوگل مپ</a>
@@ -313,7 +315,7 @@ def contact():
     </div>
     """
     return render_template_string(BASE_HTML, content=content)
-# --- احراز هویت ---
+    # --- احراز هویت ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -396,6 +398,8 @@ def admin():
         db.session.commit()
         flash('تغییرات با موفقیت ذخیره شد!')
         return redirect(url_for('admin'))
+
+    users = User.query.all() # گرفتن لیست همه کاربران
     content = f"""
     <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
         <h2 style="color: #1e3a8a; text-align: center; margin-bottom: 30px;">پنل مدیریت پیشرفته</h2>
@@ -408,6 +412,7 @@ def admin():
             <button type="button" class="btn tab-btn" onclick="openTab('act', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">فعالیت‌ها</button>
             <button type="button" class="btn tab-btn" onclick="openTab('news', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">اخبار</button>
             <button type="button" class="btn tab-btn" onclick="openTab('contact', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">تماس</button>
+            <button type="button" class="btn tab-btn" onclick="openTab('users', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">مدیریت کاربران</button>
         </div>
 
         <form method="POST" enctype="multipart/form-data">
@@ -440,7 +445,7 @@ def admin():
 
             <div id="tab-act" class="page-form" style="display:none;">
                 <input type="text" name="act_title" value="{get_content('act_title')}" placeholder="عنوان فعالیت‌ها">
-                <textarea name="act_text" rows="3" placeholder="متن فعالیت‌ها">{get_content('act_text')}</textarea>
+    <textarea name="act_text" rows="3" placeholder="متن فعالیت‌ها">{get_content('act_text')}</textarea>
                 <label>تغییر عکس (اختیاری):</label>
                 <input type="file" name="image_file" accept="image/*">
             </div>
@@ -460,6 +465,35 @@ def admin():
                 <input type="text" name="contact_address_link" value="{get_content('contact_address_link')}" placeholder="لینک مقصد">
                 <label>تغییر عکس (اختیاری):</label>
                 <input type="file" name="image_file" accept="image/*">
+            </div>
+
+            <!-- بخش مدیریت کاربران -->
+            <div id="tab-users" class="page-form" style="display:none;">
+                <h3>مدیریت کاربران</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 15px; text-align: center;">
+                    <tr style="background: #f1f5f9;">
+                        <th style="padding: 10px; border: 1px solid #e2e8f0;">نام</th>
+                        <th style="padding: 10px; border: 1px solid #e2e8f0;">ایمیل</th>
+                        <th style="padding: 10px; border: 1px solid #e2e8f0;">نقش</th>
+                        <th style="padding: 10px; border: 1px solid #e2e8f0;">عملیات</th>
+                    </tr>
+                    {{% for u in users %}}
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">{{{{ u.name }}}}</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">{{{{ u.email }}}}</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">{{{{ "ادمین" if u.is_admin else "کاربر" }}}}</td>
+                        <td style="padding: 10px; border: 1px solid #e2e8f0;">
+                            {{% if u.email != 'admin@site.com' %}}
+                            <a href="/toggle_admin/{{{{ u.id }}}}" class="btn" style="padding: 5px 10px; font-size: 12px; background: {{% if u.is_admin %}}#ef4444{{% else %}}#10b981{{% endif %}};">
+                                {{% if u.is_admin %}}حذف ادمینی{{% else %}}ارتقا به ادمین{{% endif %}}
+                            </a>
+                            {{% else %}}
+                            <span style="color: #94a3b8; font-size: 12px;">مدیر کل</span>
+                            {{% endif %}}
+                        </td>
+                    </tr>
+                    {{% endfor %}}
+                </table>
             </div>
 
             <button type="submit" class="btn" style="width: 100%; margin-top: 30px; background: #10b981;">💾 ذخیره تمام تغییرات</button>
@@ -484,5 +518,22 @@ def admin():
     """
     return render_template_string(BASE_HTML, content=content)
 
-if __name__ == '__main__':
+@app.route('/toggle_admin/<int:user_id>')
+@login_required
+def toggle_admin(user_id):
+    if not current_user.is_admin:
+        flash('شما دسترسی ندارید')
+        return redirect(url_for('home'))
+    
+    user = User.query.get_or_404(user_id)
+    if user.email == 'admin@site.com':
+        flash('نمی‌توانید دسترسی مدیر کل را تغییر دهید.')
+    else:
+        user.is_admin = not user.is_admin
+        db.session.commit()
+        flash(f'نقش کاربر {user.name} تغییر کرد.')
+        
+    return redirect(url_for('admin'))
+
+if name == 'main':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
