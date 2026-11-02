@@ -488,15 +488,15 @@ for u in users:
             <!-- بخش مدیریت کاربران -->
             <div id="tab-users" class="page-form" style="display:none;">
                 <h3>مدیریت کاربران</h3>
-                <table style="width: 100%; border-collapse: collapse; margin-top: 15px; text-align: center;">
-    <tr style="background: #f1f5f9;">
-        <th style="padding: 10px; border: 1px solid #e2e8f0;">نام</th>
-        <th style="padding: 10px; border: 1px solid #e2e8f0;">ایمیل</th>
-        <th style="padding: 10px; border: 1px solid #e2e8f0;">نقش</th>
-        <th style="padding: 10px; border: 1px solid #e2e8f0;">عملیات</th>
-    </tr>
-    {users_html}
-</table>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px; text-align: center;">
+        <tr style="background: #f1f5f9;">
+            <th style="padding: 10px; border: 1px solid #e2e8f0;">نام</th>
+            <th style="padding: 10px; border: 1px solid #e2e8f0;">ایمیل</th>
+            <th style="padding: 10px; border: 1px solid #e2e8f0;">نقش</th>
+            <th style="padding: 10px; border: 1px solid #e2e8f0;">عملیات</th>
+        </tr>
+        {users_html}
+    </table>
             </div>
 
             <button type="submit" class="btn" style="width: 100%; margin-top: 30px; background: #10b981;">💾 ذخیره تمام تغییرات</button>
