@@ -79,23 +79,19 @@ BASE_HTML = """
         @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700;900&display=swap');
         body { font-family: 'Vazirmatn', sans-serif; background: #f1f5f9; color: #334155; margin: 0; padding: 0; line-height: 1.8; }
         
-        /* Navbar */
         .navbar { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .logo-area { display: flex; align-items: center; gap: 10px; font-weight: 900; color: #1e3a8a; font-size: 20px; }
         .logo-icon { background: #3b82f6; color: white; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; border-radius: 10px; font-size: 24px; }
         
-        /* منوی شیشه‌ای و مستطیلی */
         .nav-links { display: flex; gap: 10px; }
         .nav-links a { text-decoration: none; color: #475569; padding: 8px 16px; border-radius: 8px; font-weight: 700; transition: all 0.3s ease; background: #f8fafc; }
         .nav-links a:hover, .nav-links a.active { background: #3b82f6; color: white; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); transform: translateY(-2px); }
         
-        /* کادر بزرگ (Hero) با سایه و رنگ پررنگ‌تر */
         .hero { background: linear-gradient(135deg, #bfdbfe, #93c5fd); color: #0f172a; text-align: center; padding: 80px 20px; border-radius: 30px; margin: 30px 20px; box-shadow: 0 15px 30px rgba(59, 130, 246, 0.2); border: 1px solid #60a5fa; }
         .hero h1 { font-size: 40px; margin-bottom: 20px; font-weight: 900; color: #1e3a8a; text-shadow: 1px 1px 2px rgba(255,255,255,0.5);}
         .hero p { font-size: 18px; max-width: 800px; margin: 0 auto 30px auto; opacity: 0.9; color: #1e293b;}
         .hero-img { width: 100%; max-width: 600px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); margin-bottom: 30px; object-fit: cover; }
         
-        /* Content & Cards */
         .container { max-width: 1000px; margin: 0 auto 50px auto; padding: 0 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 30px; }
         .card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); text-align: center; transition: 0.3s; border-bottom: 4px solid transparent; }
@@ -105,13 +101,13 @@ BASE_HTML = """
         .card a { display: inline-block; margin-top: 15px; color: #2563eb; text-decoration: none; font-weight: bold; }
         .card a:hover { text-decoration: underline; }
         
-        /* Buttons & Forms */
         .btn { background: #3b82f6; color: white; padding: 12px 30px; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; transition: 0.3s; font-family: inherit; font-size: 16px;}
         .btn:hover { background: #2563eb; transform: scale(1.05); box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);}
         input[type="text"], input[type="email"], input[type="password"], textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 10px; font-family: inherit; box-sizing: border-box; background: #f8fafc; }
         input:focus, textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); background: white;}
+        
         .alert { background: #fee2e2; color: #b91c1c; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-weight: bold;}
-    </style>
+        </style>
 </head>
 <body>
     <nav class="navbar">
@@ -155,8 +151,6 @@ BASE_HTML = """
 def get_content(key, default=""):
     entry = SiteContent.query.filter_by(key=key).first()
     return entry.value if entry else default
-
-# --- صفحات سایت ---
 @app.route('/')
 def home():
     title = get_content('home_title')
@@ -187,7 +181,6 @@ def about():
     text = get_content('about_text')
     img = get_content('about_img')
     img_html = f'<img src="/static/uploads/{img}" class="hero-img">' if img else ""
-    
     content = f"""
     <div class="hero">
         {img_html}
@@ -242,7 +235,6 @@ def activities():
     text = get_content('act_text')
     img = get_content('act_img')
     img_html = f'<img src="/static/uploads/{img}" class="hero-img">' if img else ""
-    
     content = f"""
     <div class="hero">
         {img_html}
@@ -258,14 +250,12 @@ def activities():
     </div>
     """
     return render_template_string(BASE_HTML, content=content)
-
 @app.route('/news')
 def news():
     title = get_content('news_title')
     text = get_content('news_text')
     img = get_content('news_img')
     img_html = f'<img src="/static/uploads/{img}" class="hero-img">' if img else ""
-    
     content = f"""
     <div class="hero">
         {img_html}
@@ -315,7 +305,7 @@ def contact():
     </div>
     """
     return render_template_string(BASE_HTML, content=content)
-    # --- احراز هویت ---
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -352,7 +342,7 @@ def register():
             
     content = """
     <div style="max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
-        <h2 style="text-align: center; color: #1e3a8a;">ثبت‌نام</h2>
+    <h2 style="text-align: center; color: #1e3a8a;">ثبت‌نام</h2>
         <form method="POST">
             <input type="text" name="name" placeholder="نام شما" required>
             <input type="email" name="email" placeholder="ایمیل" required>
@@ -370,7 +360,6 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-# --- پنل مدیریت ---
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
@@ -399,25 +388,27 @@ def admin():
         flash('تغییرات با موفقیت ذخیره شد!')
         return redirect(url_for('admin'))
 
+    # ساخت جدول کاربران در پایتون (بدون خطای سینتکس)
     users = User.query.all()
-users_html = ""
-for u in users:
-    role_text = "ادمین" if u.is_admin else "کاربر"
-    if u.email == 'admin@site.com':
-        action_html = '<span style="color: #94a3b8; font-size: 12px;">مدیر کل</span>'
-    else:
-        btn_color = "#ef4444" if u.is_admin else "#10b981"
-        btn_text = "حذف ادمینی" if u.is_admin else "ارتقا به ادمین"
-        action_html = f'<a href="/toggle_admin/{u.id}" class="btn" style="padding: 5px 10px; font-size: 12px; background: {btn_color};">{btn_text}</a>'
-    
-    users_html += f"""
-    <tr>
-        <td style="padding: 10px; border: 1px solid #e2e8f0;">{u.name}</td>
-        <td style="padding: 10px; border: 1px solid #e2e8f0;">{u.email}</td>
-        <td style="padding: 10px; border: 1px solid #e2e8f0;">{role_text}</td>
-        <td style="padding: 10px; border: 1px solid #e2e8f0;">{action_html}</td>
-    </tr>
-    """ 
+    users_html = ""
+    for u in users:
+        role_text = "ادمین" if u.is_admin else "کاربر"
+        if u.email == 'admin@site.com':
+            action_html = '<span style="color: #94a3b8; font-size: 12px;">مدیر کل</span>'
+        else:
+            btn_color = "#ef4444" if u.is_admin else "#10b981"
+            btn_text = "حذف ادمینی" if u.is_admin else "ارتقا به ادمین"
+            action_html = f'<a href="/toggle_admin/{u.id}" class="btn" style="padding: 5px 10px; font-size: 12px; background: {btn_color};">{btn_text}</a>'
+        
+        users_html += f"""
+        <tr>
+            <td style="padding: 10px; border: 1px solid #e2e8f0;">{u.name}</td>
+            <td style="padding: 10px; border: 1px solid #e2e8f0;">{u.email}</td>
+            <td style="padding: 10px; border: 1px solid #e2e8f0;">{role_text}</td>
+            <td style="padding: 10px; border: 1px solid #e2e8f0;">{action_html}</td>
+        </tr>
+        """
+
     content = f"""
     <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
         <h2 style="color: #1e3a8a; text-align: center; margin-bottom: 30px;">پنل مدیریت پیشرفته</h2>
@@ -427,7 +418,7 @@ for u in users:
             <button type="button" class="btn tab-btn active" onclick="openTab('home', this)" style="padding: 10px 20px; font-size: 14px;">خانه</button>
             <button type="button" class="btn tab-btn" onclick="openTab('about', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">درباره ما</button>
             <button type="button" class="btn tab-btn" onclick="openTab('staff', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">کادر مدرسه</button>
-            <button type="button" class="btn tab-btn" onclick="openTab('act', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">فعالیت‌ها</button>
+    <button type="button" class="btn tab-btn" onclick="openTab('act', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">فعالیت‌ها</button>
             <button type="button" class="btn tab-btn" onclick="openTab('news', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">اخبار</button>
             <button type="button" class="btn tab-btn" onclick="openTab('contact', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">تماس</button>
             <button type="button" class="btn tab-btn" onclick="openTab('users', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">مدیریت کاربران</button>
@@ -463,7 +454,7 @@ for u in users:
 
             <div id="tab-act" class="page-form" style="display:none;">
                 <input type="text" name="act_title" value="{get_content('act_title')}" placeholder="عنوان فعالیت‌ها">
-    <textarea name="act_text" rows="3" placeholder="متن فعالیت‌ها">{get_content('act_text')}</textarea>
+                <textarea name="act_text" rows="3" placeholder="متن فعالیت‌ها">{get_content('act_text')}</textarea>
                 <label>تغییر عکس (اختیاری):</label>
                 <input type="file" name="image_file" accept="image/*">
             </div>
@@ -478,25 +469,24 @@ for u in users:
             <div id="tab-contact" class="page-form" style="display:none;">
                 <input type="text" name="contact_title" value="{get_content('contact_title')}" placeholder="عنوان تماس با ما">
                 <textarea name="contact_text" rows="2" placeholder="متن تماس با ما">{get_content('contact_text')}</textarea>
-                <input type="text" name="contact_phone" value="{get_content('contact_phone')}" placeholder="شماره تماس">
+    <input type="text" name="contact_phone" value="{get_content('contact_phone')}" placeholder="شماره تماس">
                 <input type="text" name="contact_address_text" value="{get_content('contact_address_text')}" placeholder="متن آدرس">
                 <input type="text" name="contact_address_link" value="{get_content('contact_address_link')}" placeholder="لینک مقصد">
                 <label>تغییر عکس (اختیاری):</label>
                 <input type="file" name="image_file" accept="image/*">
             </div>
 
-            <!-- بخش مدیریت کاربران -->
             <div id="tab-users" class="page-form" style="display:none;">
                 <h3>مدیریت کاربران</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-top: 15px; text-align: center;">
-        <tr style="background: #f1f5f9;">
-            <th style="padding: 10px; border: 1px solid #e2e8f0;">نام</th>
-            <th style="padding: 10px; border: 1px solid #e2e8f0;">ایمیل</th>
-            <th style="padding: 10px; border: 1px solid #e2e8f0;">نقش</th>
-            <th style="padding: 10px; border: 1px solid #e2e8f0;">عملیات</th>
-        </tr>
-        {users_html}
-    </table>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 15px; text-align: center;">
+                    <tr style="background: #f1f5f9;">
+                        <th style="padding: 10px; border: 1px solid #e2e8f0;">نام</th>
+                        <th style="padding: 10px; border: 1px solid #e2e8f0;">ایمیل</th>
+                        <th style="padding: 10px; border: 1px solid #e2e8f0;">نقش</th>
+                        <th style="padding: 10px; border: 1px solid #e2e8f0;">عملیات</th>
+                    </tr>
+                    {users_html}
+                </table>
             </div>
 
             <button type="submit" class="btn" style="width: 100%; margin-top: 30px; background: #10b981;">💾 ذخیره تمام تغییرات</button>
