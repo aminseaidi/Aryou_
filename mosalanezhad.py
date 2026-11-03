@@ -125,6 +125,32 @@ with app.app_context():
         input[type="text"], input[type="email"], input[type="password"], textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 10px; font-family: inherit; box-sizing: border-box; background: #f8fafc; }
         input:focus, textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); background: white;}
         .alert { background: #fee2e2; color: #b91c1c; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-weight: bold;}
+        /* تنظیمات مخصوص گوشی‌های موبایل */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px 10px;
+                gap: 15px;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .nav-links a {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+            .hero {
+                margin: 15px 10px;
+                padding: 40px 15px;
+            }
+            .hero h1 {
+                font-size: 26px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
