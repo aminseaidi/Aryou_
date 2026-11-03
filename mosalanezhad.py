@@ -7,7 +7,10 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = 'super_secret_key_123'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+database_url = os.environ.get('DATABASE_URL', 'sqlite:///site.db')
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'static', 'uploads')
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
@@ -39,60 +42,33 @@ class Card(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# ساخت دیتابیس (بدون پاک کردن دیتابیس قبلی!)
 with app.app_context():
     db.create_all()
-    
-    # ساخت ادمین فقط اگر وجود نداشته باشد
     if not User.query.filter_by(email='admin@site.com').first():
         admin = User(email='admin@site.com', name='مدیر کل', password=generate_password_hash('123456'), is_admin=True)
         db.session.add(admin)
         db.session.commit()
-    
-    # ساخت متن‌های پیش‌فرض فقط اگر دیتابیس خالی باشد
     if not SiteContent.query.first():
         defaults = {
-            'home_title': 'جایی که درس، ایده و حال خوب کنار هم می‌نشینند.',
-            'home_text': 'ما یک مدرسه نیستیم؛ یک تیمیم. تیمی از دانش‌آموزان کنجکاو، دبیرهای پایه‌کار و کادری که بلند از صبح تا ظهر، مدرسه را به جای بهتری برای بودن تبدیل کنند.',
-            'home_img': '',
-            'about_title': 'درباره مدرسه',
-            'about_text': 'آریو مصلی‌نژاد فقط یک اسم روی سربرگ نیست. یک مدرسه دولتی پسرانه در ارومیه که زیر نظر مدیریت جادویی آقای سلاطین اداره می‌شود.',
-            'about_img': '',
-            'staff_title': 'کادر مدرسه',
-            'staff_text': 'آدم‌هایی که مدرسه را می‌چرخانند.',
-            'staff_img': '',
-            'act_title': 'فعالیت‌های آموزشی',
-            'act_text': 'درس که تمام می‌شود، آریو تازه شروع می‌شود.',
-            'act_img': '',
-            'contact_title': 'تماس با ما',
-            'contact_text': 'حرف داری؟ زنگ بزن یا سر بزن.',
-            'contact_img': '',
-            'contact_address_text': 'ارومیه، محله بازار باش، میدان جانبازان',
-            'contact_address_link': 'https://www.google.com/maps/search/?api=1&query=Urmia+Bazaar+Bash+Janbazan+Square',
-            'contact_phone': '۰۴۴-۳۸۶۸۷۶۸۶',
-            'news_title': 'اخبار مدرسه',
-            'news_text': 'به‌زودی اخبار جدید مدرسه در این صفحه قرار می‌گیرد.',
-            'news_img': ''
+            'home_title': 'جایی که درس، ایده و حال خوب کنار هم می‌نشینند.', 'home_text': 'ما یک مدرسه نیستیم؛ یک تیمیم...', 'home_img': '', 
+            'about_title': 'درباره مدرسه', 'about_text': 'آریو مصلی‌نژاد فقط یک اسم روی سربرگ نیست...', 'about_img': '', 
+            'staff_title': 'کادر مدرسه', 'staff_text': 'آدم‌هایی که مدرسه را می‌چرخانند.', 'staff_img': '', 
+            'act_title': 'فعالیت‌های آموزشی', 'act_text': 'درس که تمام می‌شود، آریو تازه شروع می‌شود.', 'act_img': '', 
+            'contact_title': 'تماس با ما', 'contact_text': 'حرف داری؟ زنگ بزن یا سر بزن.', 'contact_img': '', 
+            'contact_address_text': 'ارومیه، محله بازار باش، میدان جانبازان', 'contact_address_link': 'https://www.google.com/maps/search/?api=1&query=Urmia+Bazaar+Bash+Janbazan+Square', 'contact_phone': '۰۴۴-۳۸۶۸۷۶۸۶', 
+            'news_title': 'اخبار مدرسه', 'news_text': 'به‌زودی اخبار جدید مدرسه در این صفحه قرار می‌گیرد.', 'news_img': ''
         }
-        for key, val in defaults.items():
-            db.session.add(SiteContent(key=key, value=val))
+        for key, val in defaults.items(): db.session.add(SiteContent(key=key, value=val))
         db.session.commit()
-        
-    # ساخت کادرهای پیش‌فرض فقط اگر وجود نداشته باشند
     if not Card.query.first():
         cards = [
-            Card(page_name='home', icon='📚', title='روش ما', content='ترکیبی از آموزش منظم و فعالیت‌های دانش‌آموزی.'),
-            Card(page_name='home', icon='🏫', title='ما کی هستیم', content='مدرسه دولتی پسرانه در ارومیه.'),
-            Card(page_name='about', icon='🏫', title='تاریخچه مدرسه', content='مدرسه ما با سال‌ها تجربه در زمینه آموزش در خدمت شماست.'),
-            Card(page_name='about', icon='🎯', title='اهداف ما', content='تربیت نسلی پویا و خلاق برای آینده‌ای بهتر.'),
-            Card(page_name='staff', icon='👨‍🏫', title='جناب آقای سلاطین', content='مدیر مدرسه'),
-            Card(page_name='staff', icon='👨‍💼', title='جناب آقای الوانی', content='معاون آموزشی'),
-            Card(page_name='act', icon='🏆', title='المپیاد ورزشی', content='رقابت سالم بین کلاس‌ها.'),
-            Card(page_name='act', icon='📰', title='نشریه دانش‌آموزی', content='قلم و ایده دانش‌آموزان.'),
-            Card(page_name='news', icon='📢', title='اطلاعیه ثبت‌نام', content='ثبت‌نام کلاس‌های تابستانی آغاز شد.')
+            Card(page_name='home', icon='📚', title='روش ما', content='ترکیبی از آموزش منظم...'), 
+            Card(page_name='home', icon='🏫', title='ما کی هستیم', content='مدرسه دولتی پسرانه در ارومیه.'), 
+            Card(page_name='about', icon='🏫', title='تاریخچه مدرسه', content='مدرسه ما با سال‌ها تجربه...'), 
+            Card(page_name='staff', icon='👨‍🏫', title='جناب آقای سلاطین', content='مدیر مدرسه'), 
+            Card(page_name='staff', icon='👨‍💼', title='جناب آقای الوانی', content='معاون آموزشی')
         ]
-        for c in cards:
-            db.session.add(c)
+        for c in cards: db.session.add(c)
         db.session.commit()
         BASE_HTML = """
 <!DOCTYPE html>
@@ -125,31 +101,13 @@ with app.app_context():
         input[type="text"], input[type="email"], input[type="password"], textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 10px; font-family: inherit; box-sizing: border-box; background: #f8fafc; }
         input:focus, textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); background: white;}
         .alert { background: #fee2e2; color: #b91c1c; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; font-weight: bold;}
-        /* تنظیمات مخصوص گوشی‌های موبایل */
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                padding: 15px 10px;
-                gap: 15px;
-            }
-            .nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .nav-links a {
-                padding: 6px 12px;
-                font-size: 14px;
-            }
-            .hero {
-                margin: 15px 10px;
-                padding: 40px 15px;
-            }
-            .hero h1 {
-                font-size: 26px;
-            }
-            .grid {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 768px) { 
+            .navbar { flex-direction: column; padding: 15px 10px; gap: 15px; } 
+            .nav-links { flex-wrap: wrap; justify-content: center; } 
+            .nav-links a { padding: 6px 12px; font-size: 14px; }
+            .hero { margin: 15px 10px; padding: 40px 15px; } 
+            .hero h1 { font-size: 26px; } 
+            .grid { grid-template-columns: 1fr; } 
         }
     </style>
 </head>
@@ -157,14 +115,12 @@ with app.app_context():
     <nav class="navbar">
         <div class="logo-area"><div class="logo-icon">آ</div><div>آریو مصلی‌نژاد<br><span style="font-size: 12px; color: #6b7280; font-weight: normal;">ارومیه • دولتی</span></div></div>
         <div class="nav-links">
-        <a href="/">خانه</a><a href="/about">درباره ما</a><a href="/staff">کادر مدرسه</a><a href="/activities">فعالیت‌ها</a><a href="/news">اخبار</a><a href="/contact">تماس</a>
+            <a href="/">خانه</a><a href="/about">درباره ما</a><a href="/staff">کادر مدرسه</a><a href="/activities">فعالیت‌ها</a><a href="/news">اخبار</a><a href="/contact">تماس</a>
             {% if current_user.is_authenticated and current_user.is_admin %}<a href="/admin" style="color: #ef4444;">⚙️ پنل مدیریت</a>{% endif %}
             {% if current_user.is_authenticated %}<a href="/logout" style="color: #f59e0b;">خروج ({{ current_user.name }})</a>{% else %}<a href="/login" style="color: #2563eb;">ورود / ثبت‌نام</a>{% endif %}
         </div>
     </nav>
-    <div class="container">
-        {% with messages = get_flashed_messages() %}{% if messages %}{% for message in messages %}<div class="alert">{{ message }}</div>{% endfor %}{% endif %}{% endwith %}
-    </div>
+    <div class="container">{% with messages = get_flashed_messages() %}{% if messages %}{% for message in messages %}<div class="alert">{{ message }}</div>{% endfor %}{% endif %}{% endwith %}</div>
     {{ content | safe }}
 </body>
 </html>
@@ -177,25 +133,9 @@ def get_content(key, default=""):
 def render_page(title_key, text_key, img_key, page_name):
     title, text, img = get_content(title_key), get_content(text_key), get_content(img_key)
     img_html = f'<img src="/static/uploads/{img}" class="hero-img">' if img else ""
-    
-    # ساخت کارت‌ها از دیتابیس
     cards = Card.query.filter_by(page_name=page_name).all()
-    cards_html = ""
-    for c in cards:
-        cards_html += f'<div class="card"><div class="card-icon">{c.icon}</div><h3>{c.title}</h3><p>{c.content}</p></div>'
-
-    content = f"""
-    <div class="hero">
-        {img_html}
-        <h1>{title}</h1>
-        <p>{text}</p>
-    </div>
-    <div class="container">
-        <div class="grid">
-            {cards_html}
-        </div>
-    </div>
-    """
+    cards_html = "".join([f'<div class="card"><div class="card-icon">{c.icon}</div><h3>{c.title}</h3><p>{c.content}</p></div>' for c in cards])
+    content = f'<div class="hero">{img_html}<h1>{title}</h1><p>{text}</p></div><div class="container"><div class="grid">{cards_html}</div></div>'
     return render_template_string(BASE_HTML, content=content)
 
 @app.route('/')
@@ -217,31 +157,16 @@ def news(): return render_page('news_title', 'news_text', 'news_img', 'news')
 def contact():
     title, text, img = get_content('contact_title'), get_content('contact_text'), get_content('contact_img')
     img_html = f'<img src="/static/uploads/{img}" class="hero-img">' if img else ""
-    content = f"""
-    <div class="hero">{img_html}<h1>{title}</h1><p>{text}</p></div>
-    <div class="container">
-        <div class="grid">
-            <div class="card"><div class="card-icon">📞</div><h3>تلفن</h3><p dir="ltr" style="font-weight: bold; font-size: 20px;">{get_content('contact_phone')}</p></div>
-            <div class="card"><div class="card-icon">📍</div><h3>آدرس</h3><p>{get_content('contact_address_text')}</p><a href="{get_content('contact_address_link')}" target="_blank" class="btn" style="margin-top: 15px; font-size: 14px; padding: 10px 20px;">مشاهده در نقشه</a></div>
-        </div>
-    </div>
-    """
+    content = f'<div class="hero">{img_html}<h1>{title}</h1><p>{text}</p></div><div class="container"><div class="grid"><div class="card"><div class="card-icon">📞</div><h3>تلفن</h3><p dir="ltr" style="font-weight: bold; font-size: 20px;">{get_content("contact_phone")}</p></div><div class="card"><div class="card-icon">📍</div><h3>آدرس</h3><p>{get_content("contact_address_text")}</p><a href="{get_content("contact_address_link")}" target="_blank" class="btn" style="margin-top: 15px; font-size: 14px; padding: 10px 20px;">مشاهده در نقشه</a></div></div></div>'
     return render_template_string(BASE_HTML, content=content)
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         user = User.query.filter_by(email=request.form.get('email')).first()
         if user and check_password_hash(user.password, request.form.get('password')):
-            login_user(user)
-            return redirect(url_for('home'))
+            login_user(user); return redirect(url_for('home'))
         flash('ایمیل یا رمز اشتباه است.')
-    content = """
-    <div style="max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
-        <h2 style="text-align: center; color: #1e3a8a;">ورود</h2>
-        <form method="POST"><input type="email" name="email" placeholder="ایمیل" required><input type="password" name="password" placeholder="رمز عبور" required><button type="submit" class="btn" style="width: 100%;">ورود</button></form>
-        <p style="text-align: center; margin-top: 15px;">حساب ندارید؟ <a href="/register" style="color: #2563eb;">ثبت‌نام</a></p>
-    </div>
-    """
+    content = '<div style="max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);"><h2 style="text-align: center; color: #1e3a8a;">ورود</h2><form method="POST"><input type="email" name="email" placeholder="ایمیل" required><input type="password" name="password" placeholder="رمز عبور" required><button type="submit" class="btn" style="width: 100%;">ورود</button></form><p style="text-align: center; margin-top: 15px;">حساب ندارید؟ <a href="/register" style="color: #2563eb;">ثبت‌نام</a></p></div>'
     return render_template_string(BASE_HTML, content=content)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -252,12 +177,7 @@ def register():
             new_user = User(email=request.form.get('email'), name=request.form.get('name'), password=generate_password_hash(request.form.get('password')))
             db.session.add(new_user); db.session.commit()
             flash('ثبت‌نام موفق!'); return redirect(url_for('login'))
-    content = """
-    <div style="max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
-        <h2 style="text-align: center; color: #1e3a8a;">ثبت‌نام</h2>
-        <form method="POST"><input type="text" name="name" placeholder="نام" required><input type="email" name="email" placeholder="ایمیل" required><input type="password" name="password" placeholder="رمز عبور" required><button type="submit" class="btn" style="width: 100%;">ثبت‌نام</button></form>
-    </div>
-    """
+    content = '<div style="max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);"><h2 style="text-align: center; color: #1e3a8a;">ثبت‌نام</h2><form method="POST"><input type="text" name="name" placeholder="نام" required><input type="email" name="email" placeholder="ایمیل" required><input type="password" name="password" placeholder="رمز عبور" required><button type="submit" class="btn" style="width: 100%;">ثبت‌نام</button></form></div>'
     return render_template_string(BASE_HTML, content=content)
 
 @app.route('/logout')
@@ -267,7 +187,9 @@ def logout(): logout_user(); return redirect(url_for('home'))
 @app.route('/admin', methods=['GET', 'POST'])
 @login_required
 def admin():
-    if not current_user.is_admin: flash('عدم دسترسی'); return redirect(url_for('home'))
+    if not current_user.is_admin:
+        flash('عدم دسترسی')
+        return redirect(url_for('home'))
         
     if request.method == 'POST':
         action = request.form.get('action')
@@ -284,73 +206,108 @@ def admin():
             for key in request.form:
                 if key not in ['image_file', 'page_name', 'action']:
                     entry = SiteContent.query.filter_by(key=key).first()
-                    if entry: entry.value = request.form.get(key)
-                    else: db.session.add(SiteContent(key=key, value=request.form.get(key)))
+                    if entry:
+                        entry.value = request.form.get(key)
+                    else:
+                        db.session.add(SiteContent(key=key, value=request.form.get(key)))
             file = request.files.get('image_file')
             page = request.form.get('page_name')
             if file and file.filename != '' and page:
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 entry = SiteContent.query.filter_by(key=f"{page}_img").first()
-                if entry: entry.value = filename
-                else: db.session.add(SiteContent(key=f"{page}_img", value=filename))
+                if entry:
+                    entry.value = filename
+                else:
+                    db.session.add(SiteContent(key=f"{page}_img", value=filename))
             db.session.commit()
             flash('تغییرات متن‌ها ذخیره شد!')
         return redirect(url_for('admin'))
-    # ساخت لیست کاربران و کادرها برای نمایش در پنل
+    
     users_html = ""
     for u in User.query.all():
         role_text = "ادمین" if u.is_admin else "کاربر"
         if u.email == 'admin@site.com':
-            action_html = '<span style="color: #94a3b8; font-size: 12px;">مدیر کل</span>'
+            action_html = '<span>مدیر کل</span>'
         else:
             btn_color = "#ef4444" if u.is_admin else "#10b981"
             btn_text = "حذف ادمینی" if u.is_admin else "ارتقا به ادمین"
             action_html = f'<a href="/toggle_admin/{u.id}" class="btn" style="padding: 5px 10px; font-size: 12px; background: {btn_color};">{btn_text}</a>'
-        
-        users_html += f'<tr><td style="padding: 10px; border: 1px solid #e2e8f0;">{u.name}</td><td style="padding: 10px; border: 1px solid #e2e8f0;">{u.email}</td><td style="padding: 10px; border: 1px solid #e2e8f0;">{role_text}</td><td style="padding: 10px; border: 1px solid #e2e8f0;">{action_html}</td></tr>'
-
+        users_html += f'<tr><td>{u.name}</td><td>{u.email}</td><td>{role_text}</td><td>{action_html}</td></tr>'
+    
     cards_html = ""
     for c in Card.query.all():
-        cards_html += f'<tr><td style="padding: 10px; border: 1px solid #e2e8f0;">{c.page_name}</td><td style="padding: 10px; border: 1px solid #e2e8f0;">{c.icon} {c.title}</td><td style="padding: 10px; border: 1px solid #e2e8f0;"><form method="POST" style="display:inline;"><input type="hidden" name="card_id" value="{c.id}"><button type="submit" name="action" value="delete_card" class="btn" style="background:#ef4444; padding:5px 10px; font-size:12px;">حذف</button></form></td></tr>'
-        cards_html = ""
-        for c in Card.query.all():
-            cards_html += f'<tr><td>{c.page_name}</td><td>{c.icon} {c.title}</td><td><form method="POST" style="display:inline;"><input type="hidden" name="card_id" value="{c.id}"><button type="submit" name="action" value="delete_card" class="btn" style="background:#ef4444; padding:5px 10px; font-size:12px;">حذف</button></form></td></tr>'
+        cards_html += f'<tr><td>{c.page_name}</td><td>{c.icon} {c.title}</td><td><form method="POST" style="display:inline;"><input type="hidden" name="card_id" value="{c.id}"><button type="submit" name="action" value="delete_card" class="btn" style="background:#ef4444; padding:5px 10px; font-size:12px;">حذف</button></form></td></tr>'
 
     content = f"""
     <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
         <h2 style="color: #1e3a8a; text-align: center; margin-bottom: 30px;">پنل مدیریت پیشرفته</h2>
+        
         <div style="text-align: center; margin-bottom: 20px;">
-            <button type="button" class="btn tab-btn active" onclick="openTab('home', this)" style="padding: 10px 20px; font-size: 14px;">خانه</button>
-            <button type="button" class="btn tab-btn" onclick="openTab('about', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">درباره ما</button>
-            <button type="button" class="btn tab-btn" onclick="openTab('staff', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">کادر</button>
-            <button type="button" class="btn tab-btn" onclick="openTab('act', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">فعالیت‌ها</button>
-            <button type="button" class="btn tab-btn" onclick="openTab('news', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">اخبار</button>
-            <button type="button" class="btn tab-btn" onclick="openTab('contact', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">تماس</button>
-            <button type="button" class="btn tab-btn" onclick="openTab('users', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">کاربران</button>
-            <button type="button" class="btn tab-btn" onclick="openTab('cards', this)" style="padding: 10px 20px; font-size: 14px; background: #cbd5e1; color: #334155;">مدیریت کادرها</button>
+            <button type="button" class="btn tab-btn active" onclick="openTab('home', this)">خانه</button>
+            <button type="button" class="btn tab-btn" onclick="openTab('about', this)">درباره ما</button>
+            <button type="button" class="btn tab-btn" onclick="openTab('staff', this)">کادر</button>
+            <button type="button" class="btn tab-btn" onclick="openTab('act', this)">فعالیت‌ها</button>
+            <button type="button" class="btn tab-btn" onclick="openTab('news', this)">اخبار</button>
+            <button type="button" class="btn tab-btn" onclick="openTab('contact', this)">تماس</button>
+            <button type="button" class="btn tab-btn" onclick="openTab('users', this)">کاربران</button>
+            <button type="button" class="btn tab-btn" onclick="openTab('cards', this)">مدیریت کادرها</button>
         </div>
-
         <form method="POST" enctype="multipart/form-data">
             <input type="hidden" name="page_name" id="current_page" value="home">
-            <div id="tab-home" class="page-form active"><input type="text" name="home_title" value="{get_content('home_title')}"><textarea name="home_text" rows="3">{get_content('home_text')}</textarea><input type="file" name="image_file"></div>
-            <div id="tab-about" class="page-form" style="display:none;"><input type="text" name="about_title" value="{get_content('about_title')}"><textarea name="about_text" rows="3">{get_content('about_text')}</textarea><input type="file" name="image_file"></div>
-            <div id="tab-staff" class="page-form" style="display:none;"><input type="text" name="staff_title" value="{get_content('staff_title')}"><textarea name="staff_text" rows="2">{get_content('staff_text')}</textarea><input type="file" name="image_file"></div>
-            <div id="tab-act" class="page-form" style="display:none;"><input type="text" name="act_title" value="{get_content('act_title')}"><textarea name="act_text" rows="3">{get_content('act_text')}</textarea><input type="file" name="image_file"></div>
-            <div id="tab-news" class="page-form" style="display:none;"><input type="text" name="news_title" value="{get_content('news_title')}"><textarea name="news_text" rows="3">{get_content('news_text')}</textarea><input type="file" name="image_file"></div>
+            
+            <div id="tab-home" class="page-form active">
+                <input type="text" name="home_title" value="{get_content('home_title')}">
+                <textarea name="home_text" rows="3">{get_content('home_text')}</textarea>
+                <input type="file" name="image_file">
+            </div>
+            
+            <div id="tab-about" class="page-form" style="display:none;">
+                <input type="text" name="about_title" value="{get_content('about_title')}">
+                <textarea name="about_text" rows="3">{get_content('about_text')}</textarea>
+                <input type="file" name="image_file">
+            </div>
+            
+            <div id="tab-staff" class="page-form" style="display:none;">
+                <input type="text" name="staff_title" value="{get_content('staff_title')}">
+                <textarea name="staff_text" rows="2">{get_content('staff_text')}</textarea>
+                <input type="file" name="image_file">
+            </div>
+            
+            <div id="tab-act" class="page-form" style="display:none;">
+                <input type="text" name="act_title" value="{get_content('act_title')}">
+                <textarea name="act_text" rows="3">{get_content('act_text')}</textarea>
+                <input type="file" name="image_file">
+            </div>
+            
+            <div id="tab-news" class="page-form" style="display:none;">
+                <input type="text" name="news_title" value="{get_content('news_title')}">
+                <textarea name="news_text" rows="3">{get_content('news_text')}</textarea>
+                <input type="file" name="image_file">
+            </div>
+            
             <div id="tab-contact" class="page-form" style="display:none;">
-                <input type="text" name="contact_title" value="{get_content('contact_title')}"><textarea name="contact_text" rows="2">{get_content('contact_text')}</textarea>
+                <input type="text" name="contact_title" value="{get_content('contact_title')}">
+                <textarea name="contact_text" rows="2">{get_content('contact_text')}</textarea>
                 <input type="text" name="contact_phone" value="{get_content('contact_phone')}" placeholder="تلفن">
                 <input type="text" name="contact_address_text" value="{get_content('contact_address_text')}" placeholder="آدرس">
                 <input type="text" name="contact_address_link" value="{get_content('contact_address_link')}" placeholder="لینک نقشه">
                 <input type="file" name="image_file">
             </div>
+            
             <div id="tab-users" class="page-form" style="display:none;">
-                <table style="width: 100%; border-collapse: collapse; text-align: center;"><tr style="background: #f1f5f9;"><th>نام</th><th>ایمیل</th><th>نقش</th><th>عملیات</th></tr>{users_html}</table>
+                <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                    <tr style="background: #f1f5f9;"><th>نام</th><th>ایمیل</th><th>نقش</th><th>عملیات</th></tr>
+                    {users_html}
+                </table>
             </div>
+            
             <div id="tab-cards" class="page-form" style="display:none;">
-                <h3>کادرهای فعلی (برای ویرایش، حذف و مجدد اضافه کنید)</h3>
-                <table style="width: 100%; border-collapse: collapse; text-align: center; margin-bottom: 20px;"><tr style="background: #f1f5f9;"><th>صفحه</th><th>عنوان</th><th>عملیات</th></tr>{cards_html}</table>
+                <h3>کادرهای فعلی</h3>
+                <table style="width: 100%; border-collapse: collapse; text-align: center; margin-bottom: 20px;">
+                    <tr style="background: #f1f5f9;"><th>صفحه</th><th>عنوان</th><th>عملیات</th></tr>
+                    {cards_html}
+                </table>
                 <hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 20px 0;">
                 <h3 style="color: #10b981;">افزودن کادر جدید</h3>
                 <select name="card_page" style="padding:10px; margin-bottom:10px; border-radius:8px; width:100%;">
@@ -361,9 +318,11 @@ def admin():
                 <textarea name="card_content" rows="2" placeholder="متن کادر"></textarea>
                 <button type="submit" name="action" value="add_card" class="btn" style="background: #10b981; width: 100%;">➕ افزودن کادر</button>
             </div>
+            
             <button type="submit" name="action" value="save_content" class="btn" style="width: 100%; margin-top: 30px; background: #3b82f6;">💾 ذخیره تغییرات متن‌ها</button>
         </form>
     </div>
+
     <script>
         function openTab(tabName, btn) {{
             document.querySelectorAll('.page-form').forEach(el => el.style.display = 'none');
@@ -375,11 +334,11 @@ def admin():
     </script>
     """
     return render_template_string(BASE_HTML, content=content)
-
 @app.route('/toggle_admin/<int:user_id>')
 @login_required
 def toggle_admin(user_id):
-    if not current_user.is_admin: return redirect(url_for('home'))
+    if not current_user.is_admin: 
+        return redirect(url_for('home'))
     user = User.query.get_or_404(user_id)
     if user.email != 'admin@site.com':
         user.is_admin = not user.is_admin
