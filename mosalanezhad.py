@@ -25,7 +25,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True, nullable=False)
     name = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.String(150), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
 class SiteContent(db.Model):
@@ -45,6 +45,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 with app.app_context():
+    db.drop_all()
     db.create_all()
     if not User.query.filter_by(email='admin@site.com').first():
         admin = User(email='admin@site.com', name='مدیر کل', password=generate_password_hash('123456'), is_admin=True)
