@@ -50,6 +50,7 @@ def load_user(user_id):
 
 # --- ساخت دیتابیس و داده‌های اولیه (بدون پاک شدن با هر ری‌استارت) ---
 with app.app_context():
+    db.drop_all()
     db.create_all()
     
     # ساخت ادمین اصلی اگر وجود نداشته باشد
