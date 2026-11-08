@@ -70,7 +70,10 @@ with app.app_context():
             'about_img': '', 
             'staff_title': 'کادر مدرسه',
             'staff_text': 'کادری خلاق، پرانرژی و دلسوز که با مدیریت آقای سلاطین و همراهی آقای الوانی، هر روز یک روز به‌یادماندنی برای دانش‌آموزان می‌سازند.',
-            'staff_img': '', 
+            'staff_img': '',
+            'teachers_title': 'معلمان مدرسه',
+            'teachers_text': 'دبیران دلسوز و مجرب مدرسه آریو مصلی‌نژاد',
+            'teachers_img': '',
             'act_title': 'فعالیت‌های آموزشی',
             'act_text': 'درس که تمام می‌شود، آریو تازه شروع می‌شود.',
             'act_img': '', 
@@ -103,6 +106,9 @@ with app.app_context():
             Card(page_name='staff', icon='👨‍🏫', title='جناب آقای الوانی', content='معاون آموزشی'),
             Card(page_name='staff', icon='👨‍🏫', title='جناب آقای عبدالهی', content='معاون اجرایی'),
             Card(page_name='staff', icon='👨‍🏫', title='جناب آقای تاج الدینی', content='معاون پرورشی(شیفت دو)'),
+            # کادرهای معلمان
+            Card(page_name='teachers', icon='📐', title='دبیر ریاضی', content='جناب آقای الوانی'),
+            Card(page_name='teachers', icon='🧪', title='دبیر علوم', content=''),
             # کادرهای فعالیت‌ها
             Card(page_name='act', icon='🏆', title='المپیاد ورزشی', content='رقابت سالم و پرنشاط بین کلاس‌ها.'),
             Card(page_name='act', icon='📰', title='نشریه دانش‌آموزی', content='قلم و ایده دانش‌آموزان در قالب نشریه.'),
@@ -229,6 +235,9 @@ def home(): return render_page('home_title', 'home_text', 'home_img', 'home')
 
 @app.route('/about')
 def about(): return render_page('about_title', 'about_text', 'about_img', 'about')
+
+@app.route('/teachers')
+def teachers(): return render_page('teachers_title', 'teachers_text', 'teachers_img', 'teachers')
 
 @app.route('/staff')
 def staff(): return render_page('staff_title', 'staff_text', 'staff_img', 'staff')
@@ -426,6 +435,12 @@ def admin():
                 <textarea name="staff_text" rows="2">{get_content('staff_text')}</textarea>
                 <input type="file" name="image_file">
             </div>
+
+            <div id="tab-teachers" class="page-form" style="display:none;">
+                <input type="text" name="teachers_title" value="{get_content('teachers_title')}" placeholder="عنوان صفحه معلمان">
+                <textarea name="teachers_text" rows="2" placeholder="متن صفحه معلمان">{get_content('teachers_text')}</textarea>
+                <input type="file" name="image_file" accept="image/*">
+            </div>
             
             <div id="tab-act" class="page-form" style="display:none;">
                 <input type="text" name="act_title" value="{get_content('act_title')}">
@@ -467,6 +482,7 @@ def admin():
                     <option value="home">خانه</option>
                     <option value="about">درباره ما</option>
                     <option value="staff">کادر مدرسه</option>
+                    <option value="teachers">معلمان</option>
                     <option value="act">فعالیت‌ها</option>
                     <option value="news">اخبار</option>
                 </select>
