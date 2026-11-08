@@ -103,12 +103,15 @@ with app.app_context():
             Card(page_name='about', icon='🎯', title='اهداف ما', content='تربیت نسلی پویا، خلاق و متعهد برای ساختن آینده‌ای روشن‌تر.'),
             # کادرهای کادر مدرسه
             Card(page_name='staff', icon='👨‍💼', title='جناب آقای سلاطین', content='مدیر مدرسه'),
+            Card(page_name='staff', icon='👨‍💼', title='جناب آقای مبشر', content='مدیر مدرسه (شیفت دو)'),
             Card(page_name='staff', icon='👨‍🏫', title='جناب آقای الوانی', content='معاون آموزشی'),
             Card(page_name='staff', icon='👨‍🏫', title='جناب آقای عبدالهی', content='معاون اجرایی'),
             Card(page_name='staff', icon='👨‍🏫', title='جناب آقای تاج الدینی', content='معاون پرورشی(شیفت دو)'),
+            Card(page_name='staff', icon='📐', title='دبیر ریاضی', content='جناب آقای الوانی'),
+            Card(page_name='staff', icon='🧪', title='دبیر علوم', content='جناب آقای علی اقدم'),
             # کادرهای معلمان
             Card(page_name='teachers', icon='📐', title='دبیر ریاضی', content='جناب آقای الوانی'),
-            Card(page_name='teachers', icon='🧪', title='دبیر علوم', content=''),
+            Card(page_name='teachers', icon='🧪', title='دبیر علوم', content='جناب آقای علی اقدم'),
             # کادرهای فعالیت‌ها
             Card(page_name='act', icon='🏆', title='المپیاد ورزشی', content='رقابت سالم و پرنشاط بین کلاس‌ها.'),
             Card(page_name='act', icon='📰', title='نشریه دانش‌آموزی', content='قلم و ایده دانش‌آموزان در قالب نشریه.'),
