@@ -108,9 +108,20 @@ with app.app_context():
             Card(page_name='staff', icon='👨‍🏫', title='جناب آقای عبدالهی', content='معاون اجرایی'),
             Card(page_name='staff', icon='👨‍🏫', title='جناب آقای تاج الدینی', content='معاون پرورشی(شیفت دو)'),
             # کادرهای معلمان
-            # --- پایه هفتم ---
-            Card(page_name='teachers', icon='📚', title='پایه هفتم - کلاس ۱۷۱', content='ریاضی: ملکی\nعلوم: رحیمی آذر\nادبیات: رحمانی\nعربی: عنایتی\nدینی: سلیمانی\nقرآن: رمضانی\nزبان: سهرابی\nمطالعات: بهروز نیا\nکاروفناوری: بابا پور\nتفکر: صفر علی\nورزش: رسول زاده\nهنر: نامعلوم\nانشا: رحمانی'),
-            
+            # کادرهای معلمان (دسته‌بندی شده بر اساس درس)
+            Card(page_name='teachers', icon='📐', title='دبیران ریاضی', content='ملکی، الوانی، سمایی، بیانی'),
+            Card(page_name='teachers', icon='🔬', title='دبیران علوم تجربی', content='رحیمی آذر، علی اکبری، حسین زاده'),
+            Card(page_name='teachers', icon='📖', title='دبیران ادبیات فارسی', content='رحمانی، حیدری'),
+            Card(page_name='teachers', icon='📜', title='دبیران عربی', content='عنایتی، کاظمی، قنبرلو'),
+            Card(page_name='teachers', icon='🕌', title='دبیران دینی و قرآن', content='سلیمانی، رمضانی، مرتضی تاج الدین، قاسم زاده'),
+            Card(page_name='teachers', icon='🇬🇧', title='دبیران زبان انگلیسی', content='سهرابی، عباسی، قاسم زاده'),
+            Card(page_name='teachers', icon='🗺️', title='دبیران مطالعات اجتماعی', content='بهروز نیا، کاظمی، علی اکبری'),
+            Card(page_name='teachers', icon='🛠️', title='دبیران کاروفناوری', content='بابا پور، حسین پور'),
+            Card(page_name='teachers', icon='🧠', title='دبیران تفکر', content='صفر علی، زاهدنیا، دلداده'),
+            Card(page_name='teachers', icon='⚽', title='مربیان ورزش', content='رسول زاده'),
+            Card(page_name='teachers', icon='🛡️', title='دبیران آمادگی دفاعی', content='تبریزی'),
+            Card(page_name='teachers', icon='🎨', title='دبیران هنر', content='گل محمدی، رضایی'),
+            Card(page_name='teachers', icon='✍️', title='دبیران انشا', content='رحمانی، عبدی وش'),
             # کادرهای فعالیت‌ها
             Card(page_name='act', icon='🏆', title='المپیاد ورزشی', content='رقابت سالم و پرنشاط بین کلاس‌ها.'),
             Card(page_name='act', icon='📰', title='نشریه دانش‌آموزی', content='قلم و ایده دانش‌آموزان در قالب نشریه.'),
