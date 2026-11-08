@@ -94,21 +94,21 @@ with app.app_context():
             # کادرهای خانه
             Card(page_name='home', icon='📚', title='روش ما', content='ترکیبی از آموزش منظم، فعالیت‌های دانش‌آموزی و فضایی دوستانه برای یادگیری بهتر.'),
             Card(page_name='home', icon='🏫', title='ما کی هستیم', content='مدرسه دولتی پسرانه در ارومیه.'),
-            Card(page_name='home', icon='💻', title='طراح سایت', content='محمد امیر سعیدی و امیرعباس قاسمی\nآیدی ایتا: @amin_hr\nآیدی روبیکا: @AMINHANDALA'),
+            Card(page_name='home', icon='💻', title='طراح سایت', content='محمد امین سعیدی و امیرعباس قاسمی\nآیدی ایتا: @amin_Hr\nآیدی روبیکا: @AMINHANDALA'),
             # کادرهای درباره ما
             Card(page_name='about', icon='🏫', title='تاریخچه مدرسه', content='مدرسه ما با سال‌ها تجربه در زمینه آموزش و پرورش، همواره در تلاش بوده تا محیطی پویا و با نشاط برای دانش‌آموزان فراهم کند.'),
             Card(page_name='about', icon='🎯', title='اهداف ما', content='تربیت نسلی پویا، خلاق و متعهد برای ساختن آینده‌ای روشن‌تر.'),
-            Card(page_name='about', icon='🌟', title='جای خالی شما', content='این کادر می‌تواند به دستان شما پر شود...'),
             # کادرهای کادر مدرسه
-            Card(page_name='staff', icon='👨‍🏫', title='جناب آقای سلاطین', content='مدیر مدرسه'),
-            Card(page_name='staff', icon='👨‍💼', title='جناب آقای الوانی', content='معاون آموزشی'),
+            Card(page_name='staff', icon='👨‍💼', title='جناب آقای سلاطین', content='مدیر مدرسه'),
+            Card(page_name='staff', icon='👨‍🏫', title='جناب آقای الوانی', content='معاون آموزشی'),
+            Card(page_name='staff', icon='👨‍🏫', title='جناب آقای عبدالهی', content='معاون اجرایی'),
+            Card(page_name='staff', icon='👨‍🏫', title='جناب آقای تاج الدینی', content='معاون پرورشی(شیفت دو)'),
             # کادرهای فعالیت‌ها
             Card(page_name='act', icon='🏆', title='المپیاد ورزشی', content='رقابت سالم و پرنشاط بین کلاس‌ها.'),
             Card(page_name='act', icon='📰', title='نشریه دانش‌آموزی', content='قلم و ایده دانش‌آموزان در قالب نشریه.'),
             Card(page_name='act', icon='🎭', title='گروه هنری و تئاتر', content='اجرای نمایش‌های زیبا در مناسبت‌های مختلف.'),
             Card(page_name='act', icon='🚌', title='اردوهای علمی', content='یادگیری خارج از کلاس درس.'),
             # کادرهای اخبار
-            Card(page_name='news', icon='📢', title='اطلاعیه ثبت‌نام', content='ثبت‌نام کلاس‌های تابستانی آغاز شد.'),
             Card(page_name='news', icon='🎉', title='روز دانش‌آموز', content='روز دانش‌آموز، روز تجلیل از آینده‌سازان این مرز و بوم است. در این روز، مراسم ویژه‌ای با حضور دانش‌آموزان و کادر مدرسه برگزار شد.')
         ]
         for c in cards: 
