@@ -69,7 +69,7 @@ with app.app_context():
             'about_text': 'آریو مصلی‌نژاد فقط یک اسم روی سربرگ نیست. یک مدرسه دولتی پسرانه در ارومیه است که با مدیریت دلسوزانه آقای سلاطین و تلاش کادر مجرب، محیطی امن و پویا برای آینده‌سازان این مرز و بوم فراهم کرده است.',
             'about_img': '', 
             'staff_title': 'کادر مدرسه',
-            'staff_text': 'کادری خلاق، پرانرژی و دلسوز که با مدیریت آقای سلاطین و همراهی آقای الوانی، هر روز یک روز به‌یادماندنی برای دانش‌آموزان می‌سازند.',
+            'staff_text': 'کادری خلاق، پرانرژی و دلسوز که هر روز را یک روز به‌یادماندنی برای دانش‌آموزان می‌سازند.',
             'staff_img': '',
             'teachers_title': 'معلمان مدرسه',
             'teachers_text': 'دبیران دلسوز و مجرب مدرسه آریو مصلی‌نژاد',
@@ -107,11 +107,17 @@ with app.app_context():
             Card(page_name='staff', icon='👨‍🏫', title='جناب آقای الوانی', content='معاون آموزشی'),
             Card(page_name='staff', icon='👨‍🏫', title='جناب آقای عبدالهی', content='معاون اجرایی'),
             Card(page_name='staff', icon='👨‍🏫', title='جناب آقای تاج الدینی', content='معاون پرورشی(شیفت دو)'),
-            Card(page_name='staff', icon='📐', title='دبیر ریاضی', content='جناب آقای الوانی'),
-            Card(page_name='staff', icon='🧪', title='دبیر علوم', content='جناب آقای علی اقدم'),
             # کادرهای معلمان
             Card(page_name='teachers', icon='📐', title='دبیر ریاضی', content='جناب آقای الوانی'),
             Card(page_name='teachers', icon='🧪', title='دبیر علوم', content='جناب آقای علی اقدم'),
+            Card(page_name='teachers', icon='🗺️', title='دبیر مطالعات اجتماعی', content='در حال تکمیل...'),
+            Card(page_name='teachers', icon='📖', title='دبیر ادبیات فارسی', content='در حال تکمیل...'),
+            Card(page_name='teachers', icon='🇬🇧', title='دبیر زبان انگلیسی', content='در حال تکمیل...'),
+            Card(page_name='teachers', icon='🛡️', title='دبیر آمادگی دفاعی', content='در حال تکمیل...'),
+            Card(page_name='teachers', icon='🛠️', title='دبیر کاروفناوری', content='در حال تکمیل...'),
+            Card(page_name='teachers', icon='✍️', title='دبیر انشا', content='در حال تکمیل...'),
+            Card(page_name='teachers', icon='🕌', title='دبیر دینی و قرآن', content='در حال تکمیل...'),
+            Card(page_name='teachers', icon='📜', title='دبیر عربی', content='در حال تکمیل...'),
             # کادرهای فعالیت‌ها
             Card(page_name='act', icon='🏆', title='المپیاد ورزشی', content='رقابت سالم و پرنشاط بین کلاس‌ها.'),
             Card(page_name='act', icon='📰', title='نشریه دانش‌آموزی', content='قلم و ایده دانش‌آموزان در قالب نشریه.'),
@@ -175,6 +181,7 @@ with app.app_context():
         <div class="nav-links">
             <a href="/">خانه</a>
             <a href="/about">درباره ما</a>
+            <a href="/teachers">معلمان</a>
             <a href="/staff">کادر مدرسه</a>
             <a href="/activities">فعالیت‌ها</a>
             <a href="/news">اخبار</a>
