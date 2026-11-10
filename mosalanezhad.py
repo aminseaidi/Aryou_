@@ -103,7 +103,6 @@ with app.app_context():
             Card(page_name='about', icon='🎯', title='اهداف ما', content='تربیت نسلی پویا، خلاق و متعهد برای ساختن آینده‌ای روشن‌تر.'),
             # کادرهای کادر مدرسه
             Card(page_name='staff', icon='👨‍💼', title='جناب آقای سلاطین', content='مدیر مدرسه'),
-            Card(page_name='staff', icon='👨‍💼', title='جناب آقای مبشر', content='مدیر مدرسه (شیفت دو)'),
             Card(page_name='staff', icon='👨‍🏫', title='جناب آقای الوانی', content='معاون آموزشی'),
             Card(page_name='staff', icon='👨‍🏫', title='جناب آقای عبدالهی', content='معاون اجرایی'),
             Card(page_name='staff', icon='👨‍🏫', title='جناب آقای تاج الدینی', content='معاون پرورشی(شیفت دو)'),
@@ -111,8 +110,8 @@ with app.app_context():
             # کادرهای معلمان (دسته‌بندی شده بر اساس درس)
             Card(page_name='teachers', icon='📐', title='دبیران ریاضی', content='ملکی، الوانی، سمایی، بیانی'),
             Card(page_name='teachers', icon='🔬', title='دبیران علوم تجربی', content='رحیمی آذر، علی اکبری، حسین زاده'),
-            Card(page_name='teachers', icon='📖', title='دبیران ادبیات فارسی', content='رحمانی، حیدری'),
-            Card(page_name='teachers', icon='📜', title='دبیران عربی', content='عنایتی، کاظمی، قنبرلو'),
+            Card(page_name='teachers', icon='📖', title='دبیران ادبیات فارسی', content='رحمانی'),
+            Card(page_name='teachers', icon='📜', title='دبیران عربی', content='عنایتی، قنبرلو'),
             Card(page_name='teachers', icon='🕌', title='دبیران دینی و قرآن', content='سلیمانی، رمضانی، مرتضی تاج الدین، قاسم زاده'),
             Card(page_name='teachers', icon='🇬🇧', title='دبیران زبان انگلیسی', content='قربانی ,سهرابی, عباسی, قاسم زاده'),
             Card(page_name='teachers', icon='🗺️', title='دبیران مطالعات اجتماعی', content='بهروز نیا، کاظمی، علی اکبری'),
